@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum RunStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum EventType {
+  STATUS_CHANGED
+}
+
+model TaskRequest {
+  id         String     @id @default(uuid())
+  message    Json
+  status     TaskStatus @default(PENDING)
+  retryCount Int        @default(0)
+  maxRetries Int        @default(3)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  taskRuns   TaskRun[]
+}
+
+model TaskRun {
+  id            String         @id @default(uuid())
+  taskRequestId String
+  status        RunStatus      @default(PENDING)
+  startedAt     DateTime?
+  finishAt      DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  events        TaskRunEvent[]
+
+  taskRequest TaskRequest @relation(fields: [taskRequestId], references: [id], onDelete: Cascade)
+}
+
+model TaskRunEvent {
+  id        String    @id @default(uuid())
+  taskRunId String
+  eventType EventType
+  details   Json?
+  createdAt DateTime  @default(now())
+
+  taskRun TaskRun @relation(fields: [taskRunId], references: [id], onDelete: Cascade)
+}
