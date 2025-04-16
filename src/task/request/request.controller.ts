@@ -24,24 +24,24 @@ export class RequestController {
   @ApiOperation({ summary: 'Get Processing Tasks' })
   @Get('/processing')
   async getProcessingTaskRequests() {
-    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.PROCESSING } });
+    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.PROCESSING }, orderBy: { createdAt: 'desc' } });
   }
 
   @ApiOperation({ summary: 'Get Completed Tasks' })
   @Get('/completed')
   async getCompletedTaskRequests() {
-    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.COMPLETED } });
+    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.COMPLETED }, orderBy: { createdAt: 'desc' } });
   }
 
   @ApiOperation({ summary: 'Get Pending Tasks' })
   @Get('/pending')
   async getPendingRequests() {
-    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.PENDING } });
+    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.PENDING }, orderBy: { createdAt: 'desc' } });
   }
 
   @ApiOperation({ summary: 'Get Failed Tasks' })
   @Get('/failed')
   async getFailedRequests() {
-    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.FAILED } });
+    return this.requestService.getRequests({ include: { taskRuns: { include: { events: true } } }, where: { status: TaskStatus.FAILED }, orderBy: { createdAt: 'desc' } });
   }
 }
